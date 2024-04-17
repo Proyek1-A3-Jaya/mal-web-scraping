@@ -1,3 +1,5 @@
+name: Test Scraping
+
 on:
   workflow_dispatch:
 
