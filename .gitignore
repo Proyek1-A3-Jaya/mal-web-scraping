@@ -160,5 +160,6 @@ cython_debug/
 #.idea/
 
 # Ignore data dan gambar yang sudah discraping
+!manga/assets/manga_cover/.gitkeep
+manga/assets/manga_cover/*
 manga/assets/manga_data.json
-manga/assets/manga_cover/*.jpg
