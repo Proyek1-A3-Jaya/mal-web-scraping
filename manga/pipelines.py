@@ -14,6 +14,7 @@ from scrapy.pipelines.images import ImagesPipeline
 from scrapy.utils.python import to_bytes
 from manga.items import MangaInformation
 
+
 class MangaInformationPipeline(ImagesPipeline):
     def file_path(self, request, response=None, info=None, *, item=None):
         item = MangaInformation(item)
@@ -27,6 +28,6 @@ class MangaInformationPipeline(ImagesPipeline):
             ItemAdapter(item)[self.images_result_field] = [x for ok, x in results if ok]
 
         adapter = ItemAdapter(item)
-        if adapter.get('images'):
-            item['manga_cover_url'] = '://assets/' + item['images'][0]['path']
+        if adapter.get("images"):
+            item["manga_cover_url"] = "://assets/" + item["images"][0]["path"]
         return item

@@ -1,7 +1,5 @@
 import scrapy
-import logging
-from scrapy.http import Request, Response
-from manga.settings import PROJECT_ROOT
+from scrapy.http import Response
 from manga.items import MangaInformation
 
 
