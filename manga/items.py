@@ -19,8 +19,8 @@ class MangaInformation(scrapy.Item):
     images = scrapy.Field()
 
     # Untuk keterangan left-side
-    authors = scrapy.Field()
     altTittle = scrapy.Field()
+    type = scrapy.Field()
     volumes = scrapy.Field()
     chapters = scrapy.Field()
     status = scrapy.Field()
@@ -29,9 +29,11 @@ class MangaInformation(scrapy.Item):
     themes = scrapy.Field()
     demographic = scrapy.Field()
     serialization = scrapy.Field()
+    authors = scrapy.Field()
 
     # Untuk keterangan right-side
-    type = scrapy.Field()
-    season = scrapy.Field()
+    ranked = scrapy.Field()
     popularity = scrapy.Field()
     members = scrapy.Field()
+    synopsis = scrapy.Field()
+    characters = scrapy.Field()

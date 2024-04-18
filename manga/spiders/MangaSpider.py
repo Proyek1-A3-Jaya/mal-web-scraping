@@ -59,42 +59,52 @@ class MangaScraper(scrapy.Spider):
         manga_information["manga_cover_url"] = ""
         manga_information["image_urls"] = [manga_image_url]
 
-        tampung = "div.spaceit_pad"
-        idx = 0
-
-        for i in range(len(tampung)):
-            text = response.css(tampung)[i].css("::text").get()
-            if text == "Japanese:" or text == "Koreans:":
-                manga_information["altTittle"] = (
-                    response.css(tampung + "::text")[i].get().strip()
-                )
-            if text == "Type:":
-                manga_information["type"] = (
-                    response.css(tampung + ">a::text")[idx].get().strip()
-                )
-                idx += 1
-            if text == "Volumes:":
-                manga_information["volumes"] = (
-                    response.css(tampung + "::text")[i].get().strip()
-                )
-            if text == "Chapters:":
-                manga_information["chapters"] = (
-                    response.css(tampung + "::text")[i].get().strip()
-                )
-            if text == "Published:":
-                manga_information["published"] = (
-                    response.css(tampung + "::text")[i].get().strip()
-                )
-
-            # ! Teks tidak pernah mereturn "Genres:"
-            # TODO cari syntax yang bisa baca
-            if text == "Genres:":
-                manga_information["genres"] = response.css(tampung + ">a::attr(title)")[
-                    idx
-                ].get()
-                idx += 1
+        manga_information["altTittle"] = (
+            response.css("div.spaceit_pad:contains('Japanese:')::text").get().strip()
+        )
+        manga_information["type"] = response.css(
+            "div.spaceit_pad:contains('Type:') > a::text"
+        ).get()
+        manga_information["volumes"] = (
+            response.css("div.spaceit_pad:contains('Volumes:')::text").get().strip()
+        )
+        manga_information["chapters"] = (
+            response.css("div.spaceit_pad:contains('Chapters:')::text").get().strip()
+        )
+        manga_information["published"] = (
+            response.css("div.spaceit_pad:contains('Published:')::text").get().strip()
+        )
+        manga_information["genres"] = response.css(
+            "div.spaceit_pad:contains('Genres:') > a[title]::attr(title)"
+        ).getall()
+        manga_information["themes"] = response.css(
+            "div.spaceit_pad:contains('Themes:') > a[title]::attr(title)"
+        ).getall()
+        manga_information["demographic"] = response.css(
+            "div.spaceit_pad:contains('Demographic:') > a[title]::attr(title)"
+        ).getall()
+        manga_information["serialization"] = response.css(
+            "div.spaceit_pad:contains('Serialization:') > a[title]::attr(title)"
+        ).get()
+        manga_information["authors"] = response.css(
+            "div.spaceit_pad:contains('Authors:') > a::text"
+        ).getall()
 
         # ? Mengambil bagian sebelah kanan
-        right_side = response.css("div.rightside")
+        manga_information["ranked"] = response.css(
+            "span.numbers.ranked strong::text"
+        ).get()
+        manga_information["popularity"] = response.css(
+            "span.numbers.popularity strong::text"
+        ).get()
+        manga_information["members"] = response.css(
+            "span.numbers.members strong::text"
+        ).get()
+        manga_information["synopsis"] = "".join(
+            response.css("[itemprop='description']::text").getall()
+        )
+        manga_information["characters"] = response.css(
+            "td.borderClass[valign='top']>a::text"
+        ).getall()
 
         yield manga_information
