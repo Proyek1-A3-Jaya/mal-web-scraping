@@ -1,0 +1,48 @@
+name: Update Web Manga
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update_manga_json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set waktu ke WIB
+        run: sudo timedatectl set-timezone Asia/Jakarta
+    
+      - name: Checkout ke branch scraping
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Checkout ke branch web
+        uses: actions/checkout@v4
+        with:
+          repository: 'Proyek1-A3-Jaya/mal-web-scraping-result'
+          path: web-manga
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.2' # install the python version needed
+
+      - name: Install library python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Menjalankan script scrapping
+        run: |
+          cd ./main/manga
+          scrapy crawl manga-spider
+
+      - name: Copy assets ke web-manga
+        run: cp -r ./main/manga/assets ./web-manga
+
+      - name: Update perubahan ke repo web
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          repository: web-manga
+          commit_message: "Github Actions: Update scraping data" 
+          branch: main
+          
