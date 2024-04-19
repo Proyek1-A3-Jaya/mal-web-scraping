@@ -1,7 +1,7 @@
 name: Update Web Manga
 
 on:
-  # workflow_dispatch:
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * *' # Update setiap hari
 
