@@ -40,7 +40,7 @@ jobs:
       - name: Menjalankan script scrapping
         run: |
           cd ./main/manga
-          scrapy crawl manga-spider
+          scrapy crawl manga-spider -O assets/manga_data.json
 
       - name: Copy assets ke web-manga
         run: cp -r ./main/manga/assets ./web-manga
