@@ -6,6 +6,10 @@ on:
 jobs:
   update_manga_json:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
       - name: Set waktu ke WIB
         run: sudo timedatectl set-timezone Asia/Jakarta
@@ -43,6 +47,7 @@ jobs:
       - name: Update perubahan ke repo web
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+          
           repository: web-manga
           commit_message: "Github Actions: Update scraping data" 
           branch: main
