@@ -9,7 +9,7 @@ class MangaScraper(scrapy.Spider):
     start_urls = ["https://myanimelist.net/topmanga.php"]
 
     # ? Mendefinisikan maksimal halaman yang akan diambil ( tiap halaman terdapat 10 manga ) serta counter
-    MAX_PAGE = 1
+    MAX_PAGE = 2
     counter = 1
 
     def parse(self, response: Response):
@@ -51,7 +51,6 @@ class MangaScraper(scrapy.Spider):
         self, response: Response, manga_information: MangaInformation
     ):
         # ? Mengambil url gambar cover manga
-        information = "div.leftside>h2+div.spaceit_pad+div.spaceit_pad+div.spaceit_pad+div.spaceit_pad"
         left_side = response.css("div.leftside")
         manga_image_url = left_side.css("div:first-child a img::attr(data-src)").get()
 
@@ -74,9 +73,11 @@ class MangaScraper(scrapy.Spider):
         manga_information["published"] = (
             response.css("div.spaceit_pad:contains('Published:')::text").get().strip()
         )
-        manga_information["genres"] = response.css(
-            "div.spaceit_pad:contains('Genres:') > a[title]::attr(title)"
-        ).getall()
+        manga_information["genres"] = ", ".join(
+            response.css(
+                "div.spaceit_pad:contains('Genres:') > a[title]::attr(title)"
+            ).getall()
+        )
         manga_information["themes"] = response.css(
             "div.spaceit_pad:contains('Themes:') > a[title]::attr(title)"
         ).getall()
@@ -86,9 +87,9 @@ class MangaScraper(scrapy.Spider):
         manga_information["serialization"] = response.css(
             "div.spaceit_pad:contains('Serialization:') > a[title]::attr(title)"
         ).get()
-        manga_information["authors"] = response.css(
-            "div.spaceit_pad:contains('Authors:') > a::text"
-        ).getall()
+        manga_information["authors"] = "; ".join(
+            response.css("div.spaceit_pad:contains('Authors:') > a::text").getall()
+        )
 
         # ? Mengambil bagian sebelah kanan
         manga_information["ranked"] = response.css(
@@ -103,8 +104,8 @@ class MangaScraper(scrapy.Spider):
         manga_information["synopsis"] = "".join(
             response.css("[itemprop='description']::text").getall()
         )
-        manga_information["characters"] = response.css(
-            "td.borderClass[valign='top']>a::text"
-        ).getall()
+        manga_information["characters"] = "; ".join(
+            response.css("td.borderClass[valign='top']>a::text").getall()
+        )
 
         yield manga_information
